@@ -1,0 +1,35 @@
+<script>
+// テーブルを描画する
+function renderTable(rows) {
+    $('#result_folder').html("");
+    var html = '<table>';
+    rows.forEach(function(row) {
+      html += '<tr>';
+      html += '<td>' + row.name + '</td>';
+      html += '<td>' + row.location + '</td>';        
+      html += '</tr>';
+    });
+    html += '</table>';
+    $('#result_folder').append(html);
+}
+// サーバーに問い合わせ絞り込みを行う
+function find(location) {
+    google.script.run
+    .withSuccessHandler(function(results) {
+      renderTable(results);
+    })
+    .withFailureHandler(function(arg) {
+      console.log(arg)
+      alert('データの取得に失敗しました。');
+    }).findByLocation(location);
+}
+// DOMツリー完成後に呼び出される初期化処理
+$(function() {
+  $('#find_button').click(function() {
+    var location = $('#location').val();
+    find(location);
+  });
+  // 全データを表示
+  find();
+});
+</script>
